@@ -23,7 +23,7 @@ process.env.XDG_CONFIG_HOME = path.join(__dirname, `../`);
 const Configstore = require(`configstore`);
 const fs = require(`fs`);
 const rimraf = require(`rimraf`);
-const storage = require(`@google-cloud/storage`)();
+const Storage = require(`@google-cloud/storage`).Storage;
 const tools = require(`@google-cloud/nodejs-repo-tools`);
 const uuid = require(`uuid`);
 
@@ -646,10 +646,12 @@ describe(`system/cli`, () => {
     } catch (err) {
 
     }
+    const storage = new Storage();
     return storage.createBucket(bucketName);
   });
 
   after(() => {
+    const storage = new Storage();
     return storage.bucket(bucketName).deleteFiles({ force: true })
       .then(() => storage.bucket(bucketName).deleteFiles({ force: true }))
       .then(() => storage.bucket(bucketName).delete());
